@@ -18,8 +18,21 @@ class FilePageCache extends PageCache {
 	}
 
 	protected function getCacheFile($mixed) {
-       	$key = $this->getCacheKey($mixed);
-       	$filename = $key . '.cache';
+		$key = $this->getCacheKey($mixed);
+		$filename = $key;
+        
+		if(isset($_SERVER['QUERY_STRING']) && strpos($_SERVER['QUERY_STRING'], "ccm_paging_p_b") !== false){
+			$filename .= $_SERVER['QUERY_STRING'];
+		}
+        $filename = sha1($filename);
+
+		$md = new \Mobile_Detect();
+		if($md->isMobile()){
+			$filename = $filename . '.cachem';
+		}else{
+			$filename = $filename . '.cachep';
+		}
+		
 		if ($key) {
 			if (strlen($key) == 1) {
 				$dir = DIR_FILES_PAGE_CACHE . '/' . $key;
