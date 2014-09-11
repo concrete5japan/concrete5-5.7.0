@@ -901,7 +901,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return string
      */
     function getCollectionPath() {
-        return $this->cPath;
+        return self::getEncodePath($this->cPath);
     }
 
     /**
@@ -1011,7 +1011,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function getCollectionPathFromID($cID) {
         $db = Loader::db();
         $path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc", array($cID));
-        return $path;
+        return self::getEncodePath($path);
     }
 
     /**
