@@ -5,12 +5,14 @@ use Permissions;
 use Page;
 use Loader;
 use Core;
+use Config;
 use CollectionVersion;
 use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
 use PageEditResponse;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use \Concrete\Core\Page\Collection\Version\VersionList;
 use User;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Versions extends BackendInterfacePageController {
 
@@ -23,7 +25,7 @@ class Versions extends BackendInterfacePageController {
 		$vl = new VersionList($this->page);
 		$vl->setItemsPerPage(20);
 		$vArray = $vl->getPage($currentPage);
-		
+
 		$r = new PageEditVersionResponse();
 		$r->setPage($this->page);
 		$r->setVersionList($vl);
@@ -78,7 +80,7 @@ class Versions extends BackendInterfacePageController {
                 $c->loadVersionObject($_REQUEST['cvID']);
                 $nc = $c->cloneVersion(t('New Page Created From Version'));
                 $v = $nc->getVersionObject();
-                $drafts = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+                $drafts = Page::getByPath(Config::get('concrete.paths.drafts'));
                 $nc = $c->duplicate($drafts);
                 $nc->deactivate();
                 $nc->move($drafts);
@@ -115,7 +117,7 @@ class Versions extends BackendInterfacePageController {
 					if (is_object($v)) {
 						if (!$v->isApproved()) {
 							$r->addCollectionVersion($v);
-							$v->delete();							
+							$v->delete();
 						}
 					}
 				}

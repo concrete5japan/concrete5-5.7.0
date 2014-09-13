@@ -578,7 +578,9 @@ class Version
 
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fre = $this->getFileResource();
-        $fsl->delete($fre->getPath());
+        if ($fsl->has($fre->getPath())) {
+            $fsl->delete($fre->getPath());
+        }
     }
 
     /**
@@ -780,11 +782,11 @@ class Version
                 )
             );
 
-            if ($type->getHandle() == FILE_MANAGER_LISTING_THUMBNAIL_HANDLE) {
+            if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
                 $this->fvHasListingThumbnail = true;
             }
 
-            if ($type->getHandle() == FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE) {
+            if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
                 $this->fvHasDetailThumbnail = true;
             }
 
@@ -811,7 +813,7 @@ class Version
     public function getListingThumbnailImage()
     {
         if ($this->fvHasListingThumbnail) {
-            $type = Type::getByHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
+            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
@@ -823,7 +825,7 @@ class Version
     public function getDetailThumbnailImage()
     {
         if ($this->fvHasDetailThumbnail) {
-            $type = Type::getByHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
+            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
